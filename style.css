@@ -53,7 +53,10 @@ li {
 }
 .weather-forecast-date .weather-forcast-temperature-min {
   font-size: 16px;
-  opacity: 0.6;
+  opacity: 0.5;
+}
+.weather-forcast-temperature-min {
+  opacity: 0.5;
 }
 .weather-forcast-temperature {
   font-size: 13px;
