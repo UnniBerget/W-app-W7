@@ -22,13 +22,17 @@ function formatDate(timestamp) {
   return `${day} ${hours}:${minutes}`;
 }
 
-function displayForecast() {
+function displayForecast(response) {
+  console.log(response.data.daily);
   let forecastElement = document.querySelector("#forecast");
 
-  forecastElement.innerHTML = `
- <div class="row">
-                  <div class="col-2">
-                    <div class="weather-forecast-date">Thu</div>
+  let forecastHTML = `<div class="row">`;
+  let days = ["Thu", "Fri", "Sat"];
+  days.forEach(function (day) {
+    forecastHTML =
+      forecastHTML +
+      `<div class="col-2">
+                    <div class="weather-forecast-date">${day}</div>
                     <img
                       src="http://openweathermap.org/img/wn/01n@2x.png"
                       alt=""
@@ -38,9 +42,20 @@ function displayForecast() {
                       <span class="weather-forcast-temperature-max"> 18 </span>
                       <span class="weather-forcast-temperature-min"> 12 </span>
                     </div>
-                    </div>
-            </div>`;
+                             </div>`;
+  });
+
+  forecastHTML = forecastHTML + `</div>`;
+  forecastElement.innerHTML = forecastHTML;
 }
+
+function getForecast(coordinates) {
+  let apiKey = "0be4728976a1683c41d638c74b91b409";
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+  console.log(apiUrl);
+  axios.get(apiUrl).then(displayForecast);
+}
+
 function displayTemperature(response) {
   let temperatureElement = document.querySelector("#temperature");
   let cityElement = document.querySelector("#city");
@@ -63,6 +78,8 @@ function displayTemperature(response) {
     `http://openweathermap.org/img/wn/${response.data.weather[0].icon}@2x.png`
   );
   iconElement.setAttribute("alt", response.data.weather[0].description);
+
+  getForecast(response.data.coord);
 }
 
 function search(city) {
@@ -81,4 +98,3 @@ let form = document.querySelector("#search-form");
 form.addEventListener("submit", handleSubmit);
 
 search("New York");
-displayForecast();
